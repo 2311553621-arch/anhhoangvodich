@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Trùm Cuối</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    background:black;
+    overflow:hidden;
+    font-family:'Orbitron',sans-serif;
+}
+
+.falling{
+    position:absolute;
+    font-weight:bold;
+    text-shadow:0 0 5px currentColor,
+                0 0 15px currentColor,
+                0 0 30px currentColor;
+    animation:fall linear forwards;
+    white-space:nowrap;
+}
+
+@keyframes fall{
+    from{ transform:translateY(-100px); opacity:1; }
+    to{ transform:translateY(110vh); opacity:0; }
+}
+</style>
+</head>
+
+<body>
+
+<script>
+const messages = [
+    "Mấy con biết gì 😏",
+    "Con pò này 🤡",
+    "Mấy nhóc ác còn non cơ lắm 😎",
+    "Tụi m rồi cũng phải qui phục dưới chân anh :)"
+];
+
+function createText(){
+    const text=document.createElement("div");
+    text.classList.add("falling");
+
+    text.innerText=messages[Math.floor(Math.random()*messages.length)];
+
+    text.style.left=Math.random()*window.innerWidth+"px";
+    text.style.animationDuration=(Math.random()*3+3)+"s";
+    text.style.fontSize=(Math.random()*25+18)+"px";
+
+    const colors=["lime","red","cyan","yellow","orange","white"];
+    text.style.color=colors[Math.floor(Math.random()*colors.length)];
+
+    document.body.appendChild(text);
+
+    setTimeout(()=>{text.remove();},6000);
+}
+
+setInterval(createText,200);
+</script>
+
+</body>
+</html>

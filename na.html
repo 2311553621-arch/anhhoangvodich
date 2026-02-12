@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Trùm Cuối</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap" rel="stylesheet">
+
+<style>
+body{
+    margin:0;
+    overflow:hidden;
+    font-family:'Orbitron',sans-serif;
+    background:black;
+}
+
+body::before{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:url("https://www.transparenttextures.com/patterns/stardust.png");
+    animation: twinkle 4s infinite alternate;
+    opacity:0.5;
+}
+
+@keyframes twinkle{
+    from{opacity:0.3;}
+    to{opacity:0.7;}
+}
+
+/* Sao nền */
+body::before{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:url("https://www.transparenttextures.com/patterns/stardust.png");
+    opacity:0.3;
+    animation:twinkle 3s infinite alternate;
+}
+
+@keyframes twinkle{
+    from{opacity:0.2;}
+    to{opacity:0.5;}
+}
+
+.falling{
+    position:absolute;
+    font-weight:bold;
+    text-shadow:0 0 5px currentColor,
+                0 0 15px currentColor,
+                0 0 30px currentColor,
+                0 0 60px currentColor;
+    animation:fall linear forwards;
+    white-space:nowrap;
+    transition:transform 0.3s ease;
+    cursor:pointer;
+}
+
+.falling:hover{
+    transform:scale(1.3) rotate(10deg);
+}
+@keyframes fall{
+    from{ transform:translateY(-100px); opacity:1; }
+    to{ transform:translateY(110vh); opacity:0; }
+}
+
+@keyframes explode{
+    to{
+        transform:scale(2);
+        opacity:0;
+    }
+}
+    .particle{
+    position:fixed;
+    width:6px;
+    height:6px;
+    border-radius:50%;
+    pointer-events:none;
+    animation: explodeParticle 1s ease-out forwards;
+}
+
+@keyframes explodeParticle{
+    from{
+        transform:translate(0,0);
+        opacity:1;
+    }
+    to{
+        transform:translate(var(--x), var(--y));
+        opacity:0;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<script>
+const messages = [
+    " Chỗ này nhiều máu này vào mà cắn 😏",
+    "Con pò này 🤡",
+    "Trẫm thấy ngươi còn non nớt lắm 😎",
+    "Thức đêm cho lắm vào r thành Panda",
+    "Láo lếu r có ngày bị cắn nha em"
+];
+
+function createText(){
+    const text=document.createElement("div");
+    text.classList.add("falling");
+
+    text.innerText=messages[Math.floor(Math.random()*messages.length)];
+
+    text.style.left=Math.random()*window.innerWidth+"px";
+    text.style.animationDuration=(Math.random()*5+8)+"s";
+    text.style.fontSize=(Math.random()*25+18)+"px";
+
+    const colors=["lime","red","cyan","yellow","orange","white","violet","pink"];
+    text.style.color=colors[Math.floor(Math.random()*colors.length)];
+
+    // Thêm hiệu ứng click nổ
+    text.addEventListener("click", () => {
+
+    const rect = text.getBoundingClientRect();
+
+    const centerX = window.innerWidth / 2;
+    const centerY = window.innerHeight / 2;
+
+    const moveX = centerX - (rect.left + rect.width / 2);
+    const moveY = centerY - (rect.top + rect.height / 2);
+
+    // Dừng rơi
+    text.style.animation = "none";
+    text.style.position = "fixed";
+    text.style.left = rect.left + "px";
+    text.style.top = rect.top + "px";
+
+    void text.offsetWidth;
+
+    text.style.transition = "transform 0.5s ease";
+    text.style.transform = `translate(${moveX}px, ${moveY}px) scale(2)`;
+
+    // Sau khi bay vào giữa thì nổ
+    setTimeout(() => {
+
+        for(let i=0;i<25;i++){
+
+            const particle = document.createElement("div");
+            particle.classList.add("particle");
+
+            particle.style.left = centerX + "px";
+            particle.style.top = centerY + "px";
+
+            const colors=["lime","red","cyan","yellow","orange","white","violet","pink"];
+            particle.style.background = colors[Math.floor(Math.random()*colors.length)];
+
+            const angle = Math.random() * 2 * Math.PI;
+            const distance = Math.random() * 200 + 50;
+
+            const x = Math.cos(angle) * distance + "px";
+            const y = Math.sin(angle) * distance + "px";
+
+            particle.style.setProperty("--x", x);
+            particle.style.setProperty("--y", y);
+
+            document.body.appendChild(particle);
+
+            setTimeout(()=>particle.remove(),1000);
+        }
+
+        text.remove();
+
+    },500);
+
+});
+
+    document.body.appendChild(text);
+
+    setTimeout(()=>{text.remove();},6000);
+}
+
+setInterval(createText,200);
+</script>
+
+</body>
+</html>
